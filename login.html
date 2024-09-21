@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module">
+        // Import the necessary Firebase SDK functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
+      
+        // Firebase configuration for your app
+        const firebaseConfig = {
+          apiKey: "AIzaSyBL0LFxhqV4c_rk4IVnWHXVOAqrTWPuZMk",
+          authDomain: "group-6f597.firebaseapp.com",
+          projectId: "group-6f597",
+          storageBucket: "group-6f597.appspot.com",
+          messagingSenderId: "481057671381",
+          appId: "1:481057671381:web:d8e720e5876d1f57c7ba5c",
+          measurementId: "G-3M2LH67D94"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(); // Initialize Firebase Authentication
+        
+        // Wait for the DOM content to load
+        document.addEventListener('DOMContentLoaded', function() {
+          const loginForm = document.querySelector('.login-form');
+          
+          // Add event listener for form submission
+          loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent the form from refreshing the page
+            
+            // Get email and password from input fields
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Use Firebase Authentication to sign in the user
+            signInWithEmailAndPassword(auth, email, password)
+              .then((userCredential) => {
+                alert("Login successful!");
+                window.location.href = "todo.html"; // Redirect to To-Do List page
+              })
+              .catch((error) => {
+                // Handle any errors during sign-in
+                console.error(error.message);
+                alert("Error: " + error.message);
+              });
+          });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form class="login-form">
+            <h2>Login</h2>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+        </form>
+    </div>
+</body>
+</html>
