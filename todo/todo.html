@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="todo-container">
+        <h1>To-Do List</h1>
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Enter a new task" />
+            <button id="addTaskButton">Add Task</button>
+        </div>
+        <ul id="task-list"></ul>
+    </div>
+
+    <script type="module">
+        // Import Firebase and Firestore functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBL0LFxhqV4c_rk4IVnWHXVOAqrTWPuZMk",
+            authDomain: "group-6f597.firebaseapp.com",
+            projectId: "group-6f597",
+            storageBucket: "group-6f597.appspot.com",
+            messagingSenderId: "481057671381",
+            appId: "1:481057671381:web:d8e720e5876d1f57c7ba5c",
+            measurementId: "G-3M2LH67D94"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Authentication logic to check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('User is signed in:', user);
+
+                // Function to add a task (only if user is authenticated)
+                const addTask = async (task) => {
+                    try {
+                        await addDoc(collection(db, 'tasks'), {
+                            name: task,
+                            createdAt: new Date(),
+                            userId: user.uid  // Associate the task with the logged-in user
+                        });
+                        console.log('Task added successfully');
+                    } catch (error) {
+                        console.error('Error adding task: ', error.message);
+                    }
+                };
+
+                // Example usage: Add task when button is clicked
+                document.getElementById('addTaskButton').addEventListener('click', () => {
+                    const taskInput = document.getElementById('taskInput').value;
+                    addTask(taskInput);
+                });
+
+            } else {
+                console.log('No user is signed in');
+                alert('Please sign in to add tasks.');
+            }
+        });
+
+        // Example authentication logic (sign in a user)
+        const signIn = () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    console.log('User signed in:', result.user);
+                })
+                .catch((error) => {
+                    console.error('Error signing in:', error.message);
+                });
+        };
+
+        // Note: The Sign-In button is removed from the HTML, but the function remains for external triggers.
+    </script>
+    <script src="js/script.js"></script>
+</body>
+</html>
