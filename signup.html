@@ -1,0 +1,82 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module">
+        // Import the necessary Firebase SDK functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
+
+        // Firebase configuration for your app
+        const firebaseConfig = {
+            apiKey: "AIzaSyBL0LFxhqV4c_rk4IVnWHXVOAqrTWPuZMk",
+            authDomain: "group-6f597.firebaseapp.com",
+            projectId: "group-6f597",
+            storageBucket: "group-6f597.appspot.com",
+            messagingSenderId: "481057671381",
+            appId: "1:481057671381:web:d8e720e5876d1f57c7ba5c",
+            measurementId: "G-3M2LH67D94"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(); // Initialize Firebase Authentication
+
+        // Wait for DOM to fully load
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.querySelector('.signup-form');
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevent form from submitting the default way
+
+                // Get the values from the form
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+
+                // Create a new user using Firebase Authentication
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        alert('Signup successful!');
+                        window.location.href = 'login.html'; // Redirect to login page after successful signup
+                    })
+                    .catch((error) => {
+                        // Handle errors
+                        alert('Error: ' + error.message);
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form class="signup-form">
+            <h2>Sign Up</h2>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" required>
+            </div>
+            <button type="submit">Sign Up</button>
+            <p>Already have an account? <a href="login.html">Login</a></p>
+        </form>
+    </div>
+</body>
+</html>
